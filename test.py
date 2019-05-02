@@ -152,6 +152,16 @@ def diet_advices_from_choosed_diseases(diseases):
 # main
 # ======================================== #
 total = xlsx_read(sheet_name="女（799）")
+total_rows = list(zip(total[0],
+                      total[1],
+                      total[2],
+                      total[6],
+                      total[7],
+                      total[9],
+                      total[12],
+                      total[13],
+                      ))
+
 advicese, diseases = disease_advices(total)
 print(advicese)
 diet_advices(total)
