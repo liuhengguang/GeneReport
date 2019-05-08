@@ -3,6 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="eab5867d-1666-46f2-909c-0a1e5480b27f" name="Default Changelist" comment="txt processing test">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -12,23 +14,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1920">
-              <caret line="128" column="90" selection-start-line="128" selection-start-column="90" selection-end-line="128" selection-end-column="90" />
-              <folding>
-                <element signature="e#0#24#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="426">
-              <caret line="141" column="28" lean-forward="true" selection-start-line="141" selection-start-column="28" selection-end-line="141" selection-end-column="28" />
+            <state relative-caret-position="354">
+              <caret line="206" column="50" selection-start-line="206" selection-start-column="50" selection-end-line="206" selection-end-column="50" />
               <folding>
                 <element signature="e#0#24#0" expanded="true" />
               </folding>
@@ -60,8 +50,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="90">
-              <caret line="6" column="70" lean-forward="true" selection-start-line="6" selection-start-column="70" selection-end-line="6" selection-end-column="70" />
+            <state relative-caret-position="120">
+              <caret line="8" column="88" selection-start-line="8" selection-start-column="88" selection-end-line="8" selection-end-column="88" />
               <folding>
                 <element signature="e#0#20#0" expanded="true" />
               </folding>
@@ -90,10 +80,10 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/utils.py" />
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/test.py" />
         <option value="$PROJECT_DIR$/advice_db/advice_db.py" />
+        <option value="$PROJECT_DIR$/utils.py" />
         <option value="$PROJECT_DIR$/main.py" />
       </list>
     </option>
@@ -116,6 +106,11 @@
             <path>
               <item name="GeneReport" type="b2602c69:ProjectViewProjectNode" />
               <item name="GeneReport" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="GeneReport" type="b2602c69:ProjectViewProjectNode" />
+              <item name="GeneReport" type="462c0819:PsiDirectoryNode" />
+              <item name="test" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -177,7 +172,7 @@
     <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15544608" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.21072797" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -188,9 +183,9 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Version Control" order="7" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="8" visible="true" weight="0.25027442" />
+      <window_info anchor="bottom" id="Terminal" order="8" visible="true" weight="0.37870473" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
-      <window_info anchor="bottom" x="1920" y="28" width="1920" height="1052" id="Python Console" maximized="true" order="10" weight="0.37211856" />
+      <window_info active="true" anchor="bottom" x="1937" y="98" width="1717" height="935" id="Python Console" maximized="true" order="10" type="WINDOWED" visible="true" weight="0.6783754" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -202,16 +197,6 @@
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/test" />
-    <entry file="file://$PROJECT_DIR$/test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1920">
-          <caret line="128" column="90" selection-start-line="128" selection-start-column="90" selection-end-line="128" selection-end-column="90" />
-          <folding>
-            <element signature="e#0#24#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/advice_db/advice_db.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1440">
@@ -229,10 +214,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="609">
+          <caret line="150" column="44" lean-forward="true" selection-start-line="150" selection-start-column="44" selection-end-line="150" selection-end-column="44" />
+          <folding>
+            <element signature="e#0#24#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" column="70" lean-forward="true" selection-start-line="6" selection-start-column="70" selection-end-line="6" selection-end-column="70" />
+        <state relative-caret-position="120">
+          <caret line="8" column="88" selection-start-line="8" selection-start-column="88" selection-end-line="8" selection-end-column="88" />
           <folding>
             <element signature="e#0#20#0" expanded="true" />
           </folding>
@@ -241,8 +236,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="426">
-          <caret line="141" column="28" lean-forward="true" selection-start-line="141" selection-start-column="28" selection-end-line="141" selection-end-column="28" />
+        <state relative-caret-position="354">
+          <caret line="206" column="50" selection-start-line="206" selection-start-column="50" selection-end-line="206" selection-end-column="50" />
           <folding>
             <element signature="e#0#24#0" expanded="true" />
           </folding>
