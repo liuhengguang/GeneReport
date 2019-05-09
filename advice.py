@@ -7,7 +7,7 @@ def selecting_results():
     从所有检测项目中挑出我们关注的项
     :return:
     """
-    input_cols, input_rows = get_input()
+    input_cols, input_rows = get_input(sheet_name="女（799）")
 
     jibing_high_p = [i for i in input_rows
                      if i[0] == 1 and i[4] >= 10]
