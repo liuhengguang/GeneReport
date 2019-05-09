@@ -3,7 +3,7 @@ from openpyxl import load_workbook
 from advice_db.advice_db import *
 
 
-def xlsx_read(file_dir=Params.example_file, sheet_name="男（799）"):
+def xlsx_read(file_dir=Params.example_input, sheet_name="男（799）"):
     wb = load_workbook(file_dir)
     sheet = wb[sheet_name]
     # print("===================表格基本信息：=======================")
