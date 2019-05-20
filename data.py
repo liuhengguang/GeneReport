@@ -7,7 +7,7 @@ def xlsx_read(file_dir=Params.example_input, sheet_name="男（799）", min_col=
     sheet = wb[sheet_name]
     # print("===================表格基本信息：=======================")
     # print("sheet names:", wb.sheetnames)
-    print(sheet_name+"的维度：", sheet.calculate_dimension())
+    # print(sheet_name+"的维度：", sheet.calculate_dimension())
     r = sheet.calculate_dimension()
     data = sheet[r.split(":")[0][0]+":"+r.split(":")[1][0]]
     if max_row >= int(r.split(":")[1][1:]):
@@ -24,8 +24,8 @@ def xlsx_read(file_dir=Params.example_input, sheet_name="男（799）", min_col=
     return total
 
 
-def get_input(sheet_name="女（799）"):
-    input_cols = xlsx_read(sheet_name=sheet_name)
+def get_input(input_excel=Params.example_input, sheet_name="女（799）"):
+    input_cols = xlsx_read(file_dir=input_excel, sheet_name=sheet_name)
     # a exp line in total_rows: (1, '骨科疾病', '骨关节炎', 0.609499828501506, 8.868, 14.5497, 2, None)]
     input_rows = list(zip(input_cols[0],
                           input_cols[1],

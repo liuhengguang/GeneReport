@@ -2,18 +2,19 @@ from advice_db.advice_db import *
 from data import *
 
 
-def selecting_results():
+def selecting_results(input_excel=Params.example_input, sheet_name="女（799）"):
     """
     从所有检测项目中挑出我们关注的项
     :return:
     """
-    input_cols, input_rows = get_input(sheet_name="女（799）")
-
-    jibing_high_p = [i for i in input_rows
-                     if i[0] == 1 and i[4] >= 10]
+    input_cols, input_rows = get_input(input_excel=input_excel, sheet_name=sheet_name)
+    # 按照患病概率筛选，比大于10%
+    jibing_high_probability = [i for i in input_rows
+                               if i[0] == 1 and i[4] >= 10]
+    # 按照风险倍数筛选，比如大于2倍
     jibing_high_population = [i for i in input_rows
                               if i[0] == 1 and i[3] >= 2 and i[4] <= 10]
-    jibing = jibing_high_p + jibing_high_population
+    jibing = jibing_high_probability + jibing_high_population
 
     kuangwz = [i[2] for i in input_rows
                if i[1] == "矿物质" and "高" in i[-1]]
@@ -35,21 +36,24 @@ def selecting_results():
     personal_features = [i for i in input_rows
                          if i[0] == 3]
 
-    return jibing, kuangwz, weiss, yesuan, shansdx, personal_features
+    return jibing, jibing_high_probability, jibing_high_population, kuangwz, weiss, yesuan, shansdx, personal_features
 
 
-def knowledge():
+def load_knowledge():
     """
     step3: load knowledge
     :return: original_advices; splited_advices; splited_advices_v2; splited_advices_descriptions
     """
-    advices_cols = xlsx_read(Params.man_and_woman_799_advices, sheet_name="man_and_woman_799", max_col=3, min_row=1, max_row=1000)
+    advices_cols = xlsx_read(Params.man_and_woman_799_advices,
+                             sheet_name="man_and_woman_799", max_col=3, min_row=1, max_row=1000)
     knowledge_rows = list(zip(advices_cols[1], advices_cols[2]))
     cnt = 0
     cnt2 = 0
     diseases = []
-    original_advices = dict()  # 原始建议
-    splited_advices = dict()  # 分词结果
+    # 原始建议
+    original_advices = dict()
+    # 分词结果
+    splited_advices = dict()
     label = False
     label2 = False
     if knowledge_rows[-1] != ("end", "end"):
@@ -91,6 +95,7 @@ def knowledge():
             splited_advices_descriptions.append(row[1])
             # print(row[1])
     splited_advices_descriptions = set(splited_advices_descriptions)  # 去处重复
+    # 以“建议描述”为key
     splited_advices_v2 = dict()
     for row in splited_advices_descriptions:
         temp = []
@@ -102,123 +107,128 @@ def knowledge():
     return original_advices, splited_advices, splited_advices_v2, splited_advices_descriptions
 
 
-original_advices, splited_advices, splited_advices_v2, _ = knowledge()
+def advice_generation(input_excel=Params.example_input, sheet_name="男（799）"):
+    # =================== #
+    # 疾病相关建议
+    # =================== #
+    original_advices, splited_advices, splited_advices_v2, _ = load_knowledge()
+    jibing, jibing_high_probability, jibing_high_population, kuangwz, weiss, yesuan, shansdx, personal_features = \
+        selecting_results(input_excel=Params.example_input, sheet_name=sheet_name)
 
-jibing, kuangwz, weiss, yesuan, shansdx, personal_features = selecting_results()
-diet_advices = []
+    # 仅仅根据疾病得出的初始建议（疾病对应的建议应该优先级最高?）
+    output_advices = []
+    # 存储最终建议
+    final_output_advices = []
+    for row in jibing:
+        for advice in splited_advices[row[2]]:
+            output_advices.append(advice)
+    # 先加入各个疾病的私有建议(建议描述为"s")
+    for row in output_advices:
+        if "s" in row[1]:
+            final_output_advices.append(row)
+            output_advices.remove(row)
+    # 对非私有建议中的“建议描述”去重
+    idx = [i[1] for i in output_advices]
+    idx = list(set(idx))
+    # 解决非私有建议与膳食建议中的冲突(暂时考虑以下几组冲突)：
+    # 蛋白质：多蛋白质，少蛋白质； todo
+    # 维生素：多维生素C；
+    # 酒精：戒酒、限酒；
+    # 铁：多铁；
+    # 膳食纤维：多膳食纤维；
+    # 钙：避免过度补钙, 补钙; todo
+    for i in idx:
+        if "多维生素C" in i:
+            weiss.append("维生素C")
+            idx.remove(i)
+        if "铁" in i:
+            kuangwz.append("铁")
+            idx.remove(i)
+        if "酒" in i:
+            shansdx.append(i)
+            idx.remove(i)
+    weiss = list(set(weiss))
+    kuangwz = list(set(kuangwz))
+    shansdx = list(set(shansdx))
+    for row in idx:
+        # 非私有建议可能存在同一个“建议描述”对应着多条意思相同或相近的建议，现暂时指定第一条，后续可考虑引入随机性
+        advice = splited_advices_v2[row][0]
+        final_output_advices.append(advice)
 
-# 仅仅根据疾病得出的初始建议
-output_advices = []
-for row in jibing:
-    # print(row[2], ":")
-    for advice in splited_advices[row[2]]:
-        output_advices.append(advice)
-        # print("    ", advice[0])
-# 存储最终建议
-final_output_advices = []
-# 先加入各个疾病的私有建议
-for row in output_advices:
-    if "s" in row[1]:
-        final_output_advices.append(row)
-        output_advices.remove(row)
-# 去除非私有建议中的重复建议
-idx = [i[1] for i in output_advices]
-idx = list(set(idx))
+    # =================== #
+    # 膳食相关建议
+    # =================== #
+    diet_advices = []
+    # 矿物质相关建议
+    if kuangwz:
+        for i in kuangwz:
+            temp = kwz_advice_db[i]
+            diet_advices.append(temp)
+            # print(temp)
 
-# 解决非私有建议与膳食建议中的冲突：
-# 蛋白质：多蛋白质，少蛋白质； 维生素：多维生素C； 酒精：戒酒、限酒； 铁：多铁； 膳食纤维：多膳食纤维； 钙：避免过度补钙, 补钙
-for i in idx:
-    if "多维生素C" in i:
-        weiss.append("维生素C")
-        idx.remove(i)
-    if "铁" in i:
-        kuangwz.append("铁")
-        idx.remove(i)
-    if "酒" in i:
-        shansdx.append(i)
-        idx.remove(i)
-weiss = list(set(weiss))
-kuangwz = list(set(kuangwz))
-shansdx = list(set(shansdx))
-for row in idx:
-    advice = splited_advices_v2[row][0]
-    final_output_advices.append(advice)
+    # 维生素相关建议
+    if weiss:
+        label_B = False
+        label_other = False
+        other = []
+        for i in weiss:
+            if "B" in i:
+                label_B = True
+            elif "B" not in i and weiss:
+                other.append(i)
+                label_other = True
 
-# 膳食建议
-diet_advices = []
-# 矿物质相关建议
-if kuangwz:
-    for i in kuangwz:
-        temp = kwz_advice_db[i]
-        diet_advices.append(temp)
-        # print(temp)
+        if label_B and label_other:
+            cnt = 0
+            for v in other:
+                if cnt == 0:
+                    vitamin_advice_db["B族和其他"] = vitamin_advice_db["B族和其他"] + other[cnt]
+                else:
+                    vitamin_advice_db["B族和其他"] = vitamin_advice_db["B族和其他"] + "、" + other[cnt]
+                cnt = cnt + 1
+            diet_advices.append(vitamin_advice_db["B族和其他"])
+            # print(vitamin_advice_db["B族和其他"])
+        elif label_other and not label_B:
+            cnt = 0
+            for v in other:
+                if cnt == 0:
+                    vitamin_advice_db["仅其他"] = vitamin_advice_db["仅其他"] + other[cnt]
+                else:
+                    vitamin_advice_db["仅其他"] = vitamin_advice_db["仅其他"] + "、" + other[cnt]
+                cnt = cnt + 1
+            diet_advices.append(vitamin_advice_db["仅其他"])
+            # print(vitamin_advice_db["仅其他"])
+        elif not label_other and label_B:
+            diet_advices.append(vitamin_advice_db["仅B族"])
+            # print(vitamin_advice_db["仅B族"])
+        else:
+            print("None")
+            pass
 
-# 维生素相关建议
-if weiss:
-    label_B = False
-    label_other = False
-    other = []
-    for i in weiss:
-        if "B" in i:
-            label_B = True
-        elif "B" not in i and weiss:
-            other.append(i)
-            label_other = True
+    # 叶酸相关建议
+    if yesuan:
+        diet_advices.append(vitamin_advice_db[yesuan[0]])
 
-    if label_B and label_other:
-        cnt = 0
-        for v in other:
-            if cnt == 0:
-                vitamin_advice_db["B族和其他"] = vitamin_advice_db["B族和其他"] + other[cnt]
-            else:
-                vitamin_advice_db["B族和其他"] = vitamin_advice_db["B族和其他"] + "、" + other[cnt]
-            cnt = cnt + 1
-        diet_advices.append(vitamin_advice_db["B族和其他"])
-        # print(vitamin_advice_db["B族和其他"])
-    elif label_other and not label_B:
-        cnt = 0
-        for v in other:
-            if cnt == 0:
-                vitamin_advice_db["仅其他"] = vitamin_advice_db["仅其他"] + other[cnt]
-            else:
-                vitamin_advice_db["仅其他"] = vitamin_advice_db["仅其他"] + "、" + other[cnt]
-            cnt = cnt + 1
-        diet_advices.append(vitamin_advice_db["仅其他"])
-        # print(vitamin_advice_db["仅其他"])
-    elif not label_other and label_B:
-        diet_advices.append(vitamin_advice_db["仅B族"])
-        # print(vitamin_advice_db["仅B族"])
+    # 膳食代谢相关建议
+    label_jiejiu = False
+    label_xianjiu = False
+    for i in shansdx:
+        if "乳糖" in i:
+            diet_advices.append(rut[i])
+        # 脂肪酸和膳食纤维
+        if "膳食纤维" in i:
+            diet_advices.append(shansxw[i])
+        if "戒酒" in i:
+            label_jiejiu = True
+        if "限酒" in i:
+            label_xianjiu = True
+        if "咖啡因" in i:
+            diet_advices.append(kafy["咖啡因"])
+    if label_jiejiu and label_xianjiu:
+        diet_advices.append(jiuj["酒精"]["戒酒"])
+    elif not label_jiejiu and label_xianjiu:
+        diet_advices.append(jiuj["酒精"]["限酒"])
     else:
-        print("None")
         pass
 
-# 叶酸相关建议
-if yesuan:
-    diet_advices.append(vitamin_advice_db[yesuan[0]])
-
-# 膳食代谢
-label_jiejiu = False
-label_xianjiu = False
-for i in shansdx:
-    if "乳糖" in i:
-        diet_advices.append(rut[i])
-    # 脂肪酸和膳食纤维
-    if "膳食纤维" in i:
-        diet_advices.append(shansxw[i])
-    if "戒酒" in i:
-        label_jiejiu = True
-    if "限酒" in i:
-        label_xianjiu = True
-    if "咖啡因" in i:
-        diet_advices.append(kafy["咖啡因"])
-if label_jiejiu and label_xianjiu:
-    diet_advices.append(jiuj["酒精"]["戒酒"])
-elif not label_jiejiu and label_xianjiu:
-    diet_advices.append(jiuj["酒精"]["限酒"])
-else:
-    pass
-# 运动建议
-personal_sport_features = []
-for i in personal_features:
-    if i[1] == "运动能力":
-        personal_sport_features.append(i)
+    return jibing_high_probability, jibing_high_population, final_output_advices, diet_advices
