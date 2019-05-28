@@ -5,7 +5,7 @@ from utils import Params
 # output advices
 # ================= #
 jibing_high_probability, jibing_high_population, final_output_advices, diet_advices = \
-    advice_generation(input_excel=Params.example_input, sheet_name="男（799）")
+    advice_generation(input_excel=Params.example_input, sheet_name="女（799）")
 private_advices = [i[0] for i in final_output_advices if "s" in i[1]]
 non_private_advices = [i for i in final_output_advices if type(i) != tuple]
 
@@ -15,7 +15,7 @@ non_private_advices = [i for i in final_output_advices if type(i) != tuple]
 diseases_advices = "根据您的遗传基因信息显示，您在:\n    "
 jibing_high_probability = [i[2] for i in jibing_high_probability]
 jibing_high_population = [i[2] for i in jibing_high_population]
-diseases = jibing_high_probability + jibing_high_population
+diseases = jibing_high_probability + jibing_high_population  # 挑选出来的疾病
 for i in range(len(diseases)):
     if i == 0:
         diseases_advices = diseases_advices + diseases[0]

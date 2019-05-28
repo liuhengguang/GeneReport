@@ -113,7 +113,7 @@ def advice_generation(input_excel=Params.example_input, sheet_name="男（799）
     # =================== #
     original_advices, splited_advices, splited_advices_v2, _ = load_knowledge()
     jibing, jibing_high_probability, jibing_high_population, kuangwz, weiss, yesuan, shansdx, personal_features = \
-        selecting_results(input_excel=Params.example_input, sheet_name=sheet_name)
+        selecting_results(input_excel=input_excel, sheet_name=sheet_name)
 
     # 仅仅根据疾病得出的初始建议（疾病对应的建议应该优先级最高?）
     output_advices = []
