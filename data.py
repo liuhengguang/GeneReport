@@ -50,28 +50,15 @@ def xlsx_read_v3(file_dir=Params.example_input, sheet_name="man_799", min_col=0,
     if max_row >= int(r.split(":")[1][1:]):
         max_row = int(r.split(":")[1][1:])
     # 通过指定范围(列 → 列)
-    total = []
+    regularized_input = []
     for row in sheet.iter_rows(min_row=min_row, max_row=max_row, min_col=min_col, max_col=max_col):
         if row:
+            temp = []
             for cell in row:
                 # print(cell.value)
-                total.append(cell.value)
-    return total
-
-
-def get_input(input_excel=Params.example_input, sheet_name="女（799）"):
-    input_cols = xlsx_read(file_dir=input_excel, sheet_name=sheet_name)
-    # a exp line in total_rows: (1, '骨科疾病', '骨关节炎', 0.609499828501506, 8.868, 14.5497, 2, None)]
-    input_rows = list(zip(input_cols[0],
-                          input_cols[1],
-                          input_cols[2],
-                          input_cols[6],
-                          input_cols[7],
-                          input_cols[9],
-                          input_cols[12],
-                          input_cols[13]
-                          ))
-    return input_cols, input_rows
+                temp.append(cell.value)
+            regularized_input.append(temp)
+    return regularized_input
 
 
 def get_dz_advices(file_dir=Params.advices_regularization):  # 获取邓总提供的建议
@@ -147,6 +134,7 @@ def cal_similarity(sentence1="", sentence2=""):
 
 
 if __name__ == "__main__":
+    """
     advices, seg = get_dz_advices(file_dir=Params.advices_regularization)
 
     sen_freq = []
@@ -179,3 +167,6 @@ if __name__ == "__main__":
         print("\n")
         for line in l:
             print(line)
+    """
+
+    regularized_input = xlsx_read_v3(file_dir=Params.example_input, sheet_name="man_799", min_col=0, max_col=2, min_row=0, max_row=100)

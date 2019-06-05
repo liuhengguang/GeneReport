@@ -2,12 +2,11 @@ from advice_db.advice_db import *
 from data import *
 
 
-def selecting_results(input_excel=Params.example_input, sheet_name="女（799）"):
+def selecting_results(regularized_input):
     """
     从所有检测项目中挑出我们关注的项
     :return:
     """
-    input_cols, input_rows = get_input(input_excel=input_excel, sheet_name=sheet_name)
     # 按照患病概率筛选，比大于10%
     jibing_high_probability = [i for i in input_rows
                                if i[0] == 1 and i[4] >= 10]
