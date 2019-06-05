@@ -3,6 +3,7 @@ from openpyxl import load_workbook
 import jieba
 import numpy as np
 
+
 def xlsx_read(file_dir=Params.example_input, sheet_name="男（799）", min_col=0, max_col=14, min_row=2, max_row=75):
     wb = load_workbook(file_dir)
     sheet = wb[sheet_name]
@@ -27,6 +28,22 @@ def xlsx_read(file_dir=Params.example_input, sheet_name="男（799）", min_col=
 
 
 def xlsx_read_v2(file_dir=Params.advices_regularization, sheet_name="yan_zheng_jiedu", min_col=0, max_col=1, min_row=0, max_row=50):
+    wb = load_workbook(file_dir)
+    sheet = wb[sheet_name]
+    r = sheet.calculate_dimension()
+    if max_row >= int(r.split(":")[1][1:]):
+        max_row = int(r.split(":")[1][1:])
+    # 通过指定范围(列 → 列)
+    total = []
+    for row in sheet.iter_rows(min_row=min_row, max_row=max_row, min_col=min_col, max_col=max_col):
+        if row:
+            for cell in row:
+                # print(cell.value)
+                total.append(cell.value)
+    return total
+
+
+def xlsx_read_v3(file_dir=Params.example_input, sheet_name="man_799", min_col=0, max_col=2, min_row=0, max_row=100):
     wb = load_workbook(file_dir)
     sheet = wb[sheet_name]
     r = sheet.calculate_dimension()

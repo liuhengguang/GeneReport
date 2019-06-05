@@ -5,7 +5,7 @@ from utils import Params
 # output advices
 # ================= #
 jibing_high_probability, jibing_high_population, final_output_advices, diet_advices = \
-    advice_generation(input_excel=Params.example_input, sheet_name="女（799）")
+    advice_generation(input_excel=Params.example_input, sheet_name="男（799）")
 private_advices = [i[0] for i in final_output_advices if "s" in i[1]]
 non_private_advices = [i for i in final_output_advices if type(i) != tuple]
 
