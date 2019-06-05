@@ -16,7 +16,7 @@ def xlsx_read(file_dir=Params.example_input, sheet_name="男（799）"):
         for row in range(2, 75):  # 行
             # print(data[row][col].value)
             temp.append(data[col][row].value)
-        # print(temp)
+        # print(temp)`
         total.append(temp)
     # print(total)
     return total
