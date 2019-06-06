@@ -2,42 +2,6 @@ from advice_db.advice_db import *
 from data import *
 
 
-def selecting_results(regularized_input):
-    """
-    从所有检测项目中挑出我们关注的项
-    :return:
-    """
-    # 按照患病概率筛选，比大于10%
-    jibing_high_probability = [i for i in input_rows
-                               if i[0] == 1 and i[4] >= 10]
-    # 按照风险倍数筛选，比如大于2倍
-    jibing_high_population = [i for i in input_rows
-                              if i[0] == 1 and i[3] >= 2 and i[4] <= 10]
-    jibing = jibing_high_probability + jibing_high_population
-
-    kuangwz = [i[2] for i in input_rows
-               if i[1] == "矿物质" and "高" in i[-1]]
-
-    weiss = [i[2] for i in input_rows
-             if i[1] == "维生素" and i[2] != "叶酸" and "高" in i[-1]]
-
-    yesuan = [i[2] for i in input_rows
-              if i[2] == "叶酸" and "高" in i[-1]]
-
-    shansdx = [i[2] for i in input_rows
-               if i[1] == "膳食代谢" and "高" in i[-1]]
-    for i in input_rows:
-        if i[1] == "膳食代谢" and ("浅尝" in i[-1] or "小酌" in i[-1]):
-            shansdx.append("限酒")
-        elif i[1] == "膳食代谢" and ("戒酒" in i[-1]):
-            shansdx.append("戒酒")
-
-    personal_features = [i for i in input_rows
-                         if i[0] == 3]
-
-    return jibing, jibing_high_probability, jibing_high_population, kuangwz, weiss, yesuan, shansdx, personal_features
-
-
 def load_knowledge():
     """
     step3: load knowledge
@@ -106,20 +70,13 @@ def load_knowledge():
     return original_advices, splited_advices, splited_advices_v2, splited_advices_descriptions
 
 
-def advice_generation(input_excel=Params.example_input, sheet_name="男（799）"):
-    # =================== #
-    # 疾病相关建议
-    # =================== #
-    original_advices, splited_advices, splited_advices_v2, _ = load_knowledge()
-    jibing, jibing_high_probability, jibing_high_population, kuangwz, weiss, yesuan, shansdx, personal_features = \
-        selecting_results(input_excel=input_excel, sheet_name=sheet_name)
-
+def advice_generation(jibing, kuangwz, weiss, yesuan, shansdx, splited_advices, splited_advices_v2):
     # 仅仅根据疾病得出的初始建议（疾病对应的建议应该优先级最高?）
     output_advices = []
     # 存储最终建议
     final_output_advices = []
     for row in jibing:
-        for advice in splited_advices[row[2]]:
+        for advice in splited_advices[row]:
             output_advices.append(advice)
     # 先加入各个疾病的私有建议(建议描述为"s")
     for row in output_advices:
@@ -230,4 +187,25 @@ def advice_generation(input_excel=Params.example_input, sheet_name="男（799）
     else:
         pass
 
-    return jibing_high_probability, jibing_high_population, final_output_advices, diet_advices
+    return final_output_advices, diet_advices
+
+
+if __name__ == "__main__":
+    regularized_input = xlsx_read_v3(file_dir=Params.example_input, sheet_name="man_799", min_col=0, max_col=2,
+                                     min_row=0, max_row=100)
+    original_advices, splited_advices, splited_advices_v2, _ = load_knowledge()
+
+    # jibing, jibing_high_probability, jibing_high_population, kuangwz, weiss, yesuan, shansdx, personal_features
+    jibing = [item[0] for item in regularized_input[0:36] if item[1] == 1]
+    kuangwz = [item[0] for item in regularized_input[38:42] if item[1] == 1]
+    weiss = [item[0] for item in regularized_input[42:50] if item[1] == 1 and item[0] != "叶酸"]
+    yesuan = [item[0] for item in regularized_input if item[0] == "叶酸" and item[1] == 1]
+    shansdx = []
+
+    # advices generation
+    for i in jibing:
+        for advice in splited_advices[i]:
+            # print(advice)
+            pass
+
+    final_advices, diet_advices = advice_generation(jibing, kuangwz, weiss, yesuan, shansdx)

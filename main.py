@@ -4,8 +4,25 @@ from utils import Params
 # ================= #
 # output advices
 # ================= #
-jibing_high_probability, jibing_high_population, final_output_advices, diet_advices = \
-    advice_generation(input_excel=Params.example_input, sheet_name="男（799）")
+regularized_input = xlsx_read_v3(file_dir=Params.example_input, sheet_name="man_799", min_col=0, max_col=2,
+                                 min_row=0, max_row=100)
+original_advices, splited_advices, splited_advices_v2, _ = load_knowledge()
+
+# jibing, jibing_high_probability, jibing_high_population, kuangwz, weiss, yesuan, shansdx, personal_features
+jibing = [item[0] for item in regularized_input[0:36] if item[1] == 1]
+kuangwz = [item[0] for item in regularized_input[38:42] if item[1] == 1]
+weiss = [item[0] for item in regularized_input[42:50] if item[1] == 1 and item[0] != "叶酸"]
+yesuan = [item[0] for item in regularized_input if item[0] == "叶酸" and item[1] == 1]
+shansdx = []
+
+# advices generation
+for i in jibing:
+    for advice in splited_advices[i]:
+        # print(advice)
+        pass
+
+final_output_advices, diet_advices = advice_generation(jibing, kuangwz, weiss, yesuan, shansdx, splited_advices, splited_advices_v2)
+
 private_advices = [i[0] for i in final_output_advices if "s" in i[1]]
 non_private_advices = [i for i in final_output_advices if type(i) != tuple]
 
@@ -13,9 +30,7 @@ non_private_advices = [i for i in final_output_advices if type(i) != tuple]
 # 疾病建议
 # ================= #
 diseases_advices = "根据您的遗传基因信息显示，您在:\n    "
-jibing_high_probability = [i[2] for i in jibing_high_probability]
-jibing_high_population = [i[2] for i in jibing_high_population]
-diseases = jibing_high_probability + jibing_high_population  # 挑选出来的疾病
+diseases = jibing  # 挑选出来的疾病
 for i in range(len(diseases)):
     if i == 0:
         diseases_advices = diseases_advices + diseases[0]
