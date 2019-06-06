@@ -1,5 +1,7 @@
 from advice_db.advice_db import *
 from data import *
+import matplotlib
+from pylab import *
 
 
 def load_knowledge():
@@ -208,4 +210,19 @@ if __name__ == "__main__":
             # print(advice)
             pass
 
-    final_advices, diet_advices = advice_generation(jibing, kuangwz, weiss, yesuan, shansdx)
+    final_advices, diet_advices = advice_generation(jibing, kuangwz, weiss, yesuan, shansdx, splited_advices, splited_advices_v2)
+
+    # 统计
+    keys = [key for key in splited_advices_v2.keys()]
+    value = [len(splited_advices_v2[key]) for key in keys]
+    myfont = matplotlib.font_manager.FontProperties(fname="/usr/share/fonts/truetype/arphic/ukai.ttc")
+    mpl.rcParams['axes.unicode_minus'] = False
+    t = range(len(keys))
+    y = value
+    plt.bar(t, y)
+    plt.xticks(t, tuple(keys), fontproperties=myfont)
+    plt.title(u'“建议”统计', fontproperties=myfont)
+    plt.show()
+    # git test
+
+
