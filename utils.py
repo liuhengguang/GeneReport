@@ -18,7 +18,7 @@ def plt_bar():
     t = [1, 2, 3]
     y = t
     plt.bar(t, y)
-    plt.xticks(t, ('Bill', 'Fred', u'中国'), fontproperties=myfont)
+    plt.xticks(t, ('一', '二', u'三'), fontproperties=myfont)
     plt.title(u'matplotlib中文显示测试', fontproperties=myfont)
     plt.xlabel(u'这里是X坐标', fontproperties=myfont)
     plt.ylabel(u'这里是Y坐标', fontproperties=myfont)
